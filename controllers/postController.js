@@ -26,7 +26,14 @@ exports.viewSingle = async function(req, res){
 exports.viewEditPage = async function(req, res){
 	try{
 		let editData = await Post.findSinglePost(req.params.id)
-		res.render("admin/edit-post", {editData: editData})
+		if (editData.authorId == req.visitorID){
+			res.render("admin/edit-post", {editData: editData})
+		}else{
+			req.flash("errors", "You do not have a permission to perform that action")
+			req.session.save(()=>{
+				res.redirect("/admin")
+			})
+		}
 	}catch{
 		res.render("404")
 	}

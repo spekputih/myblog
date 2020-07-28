@@ -12,6 +12,7 @@ const findOrCreate = require('mongoose-findorcreate')
 const MongoStore =  require("connect-mongo")(session)
 const router = require("./router")
 const flash = require("connect-flash")
+const markdown = require("marked")
 
 
 mongoose.set('useNewUrlParser', true);
@@ -35,6 +36,11 @@ app.use(session({
 }))
 app.use(flash())
 app.use(function(req, res, next){
+	// make markdown function available in all ejs template
+	res.locals.filterUserHTML = content => {
+		return markdown(content)
+	}
+
 	// make all errors and success flash message are available 
 	res.locals.errors = req.flash("errors")
 	res.locals.success = req.flash("success")

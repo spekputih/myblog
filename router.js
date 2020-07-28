@@ -24,8 +24,8 @@ router.get("/profile/:firstname&:lastname", userController.ifUserExist, userCont
 router.get("/create-post", userController.mustBeLoggedIn, postController.getPost)
 router.post("/create-post", userController.mustBeLoggedIn, postController.createPost)
 router.get("/post/:id", postController.viewSingle)
-router.get("/post/:id/edit", postController.viewEditPage)
-router.post("/post/:id/edit", postController.edit)
+router.get("/post/:id/edit", userController.mustBeLoggedIn, postController.viewEditPage)
+router.post("/post/:id/edit", userController.mustBeLoggedIn, postController.edit)
 
 
 
