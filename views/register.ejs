@@ -1,0 +1,55 @@
+
+<%- include('partials/header') %>
+
+
+<!-- BEGIN CONTENT WRAPPER -->
+		<div class="content">
+			<div class="container">
+				<div class="row">
+				
+					<!-- BEGIN MAIN CONTENT -->
+					<div class="main col-sm-12">
+					
+						<div class="login col-sm-5 col-sm-offset-1">
+							
+							<%- include("./partials/flash")%>
+
+							<h1 class="center">Create New Account</h1>
+							
+							<div class="col-sm-12">
+								<form action="/register" method="POST"  class="form-style">
+									<input type="text" name="firstname" placeholder="First Name*" class="form-control" />
+									<input type="text" name="lastname" placeholder="Last Name*" class="form-control" />
+									<input type="email" name="email" placeholder="Email Address*" class="form-control" />
+									<input type="password" name="password" placeholder="Password*" class="form-control" />
+									
+									
+									<!-- <div class="checkbox">
+										<label>
+											<input type="checkbox" name="terms"> I confirm that I have read, understood and accept the <a href="#">Terms of Use</a> and the <a href="#">Privacy Policy</a>.
+										</label>
+									</div> -->
+									
+									<div class="center"><button type="submit" class="btn btn-color">Create Account</button></div>
+								</form>
+							</div>
+							
+							
+						</div>
+						
+						<div class="login-info col-sm-4 col-sm-offset-1">
+							<h1>Why should you create an account?</h1>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse facilisis purus sed justo egestas dapibus. Etiam vel sagittis nisi. Curabitur ac egestas lorem. Sed ut odio iaculis, interdum magna non, mattis dolor. Vestibulum id dignissim elit. Cras ut scelerisque dolor.</p>
+							
+							<h1>Lorem Ipsum Dolor</h1>
+							<p>Vestibulum rhoncus consequat aliquet. Mauris varius posuere mattis. Duis vitae molestie arcu. Curabitur sollicitudin, velit ut eleifend auctor, nibh orci pharetra risus, a malesuada nisi felis vel turpis. Aliquam fermentum nulla felis, sed molestie libero porttitor in. Vestibulum aliquet eu purus quis pellentesque. Nam eget lacus dolor.</p>
+						</div>
+					</div>	
+					<!-- END MAIN CONTENT -->
+
+				</div>
+			</div>
+		</div>
+		<!-- END CONTENT WRAPPER -->
+
+<%- include('partials/footer') %>

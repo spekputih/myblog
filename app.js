@@ -1,0 +1,55 @@
+//jshint esversion:6
+require('dotenv').config()
+const express = require("express")
+const mongoose = require("mongoose")
+const ejs = require("ejs")
+const bodyParser = require("body-parser")
+const session = require("express-session")
+const passport = require("passport")
+const passportLocalMongoose = require("passport-local-mongoose")
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require('mongoose-findorcreate')
+const MongoStore =  require("connect-mongo")(session)
+const router = require("./router")
+const flash = require("connect-flash")
+
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
+const app = express()
+
+
+
+app.use(express.static("public"))
+app.set("view engine", "ejs")
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(session({
+  secret: 'i love you',
+  store: new MongoStore({client: require("./db")}),
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000*60*60*24, httpOnly: true}
+}))
+app.use(flash())
+app.use(function(req, res, next){
+	// make all errors and success flash message are available 
+	res.locals.errors = req.flash("errors")
+	res.locals.success = req.flash("success")
+	//make current user id available on the req object
+	if (req.session.user){
+		req.visitorID = req.session.user._id
+	}else{
+		req.visitorID = 0
+	}
+	//make user session data available from ejs view template
+	res.locals.user = req.session.user
+	next()
+})
+app.use('/', router)
+
+
+
+module.exports = app
