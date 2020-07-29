@@ -36,23 +36,21 @@ Post.prototype.create = function(){
 	return new Promise((resolve, reject)=>{
 
 		this.validate()
-		console.log("im here")
+		
 		this.cleanUp()
 		if (!this.errors.length) {
 			//save post into database
-			console.log(this.data)
+			
 			postCollection.insertOne(this.data).then((result)=>{
-				console.log(result.ops[0]._id)
 				resolve(result.ops[0]._id)
 			}).catch(()=>{
 				this.errors.push("please try again later")
 				reject(this.errors)
-			console.log(this.errors)
 			})
 
 		} else {
 			this.errors.push("The data is not valid")
-			console.log(this.errors)
+			
 			reject(this.errors)
 
 		}
@@ -151,6 +149,23 @@ Post.findByAuthorId = function(id){
 			{$sort: {createdDate: -1}}
 		])
 
+}
+
+Post.delete = (postID, visitorID) => {
+		return new Promise(async (resolve,reject)=>{
+			try{
+				let post = await Post.findSinglePost(postID, visitorID)
+				if(post.isVisitorOwner){
+					await postCollection.deleteOne({_id: new ObjectID(postID)})
+
+					resolve(post.author)
+				}else{
+					reject()
+				}
+			}catch{
+				reject()
+			}
+		})
 }
 
 

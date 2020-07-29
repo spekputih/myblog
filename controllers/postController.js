@@ -25,8 +25,8 @@ exports.viewSingle = async function(req, res){
 
 exports.viewEditPage = async function(req, res){
 	try{
-		let editData = await Post.findSinglePost(req.params.id)
-		if (editData.authorId == req.visitorID){
+		let editData = await Post.findSinglePost(req.params.id, req.visitorID)
+		if (post.isVisitorOwner){
 			res.render("admin/edit-post", {editData: editData})
 		}else{
 			req.flash("errors", "You do not have a permission to perform that action")
@@ -65,5 +65,18 @@ exports.edit = async function(req, res){
 				res.redirect(`/post/${req.params.id}/edit`)
 			})
 		// or if the current visitor is not the owner of the requested post
+	})
+}
+
+exports.delete = (req, res) => {
+	Post.delete(req.params.id, req.visitorID).then((result)=>{
+		req.flash("success", "Successfully deleted")
+		req.session.save(() => {
+			res.redirect(`/profile/${result.firstname}&${result.lastname}`)
+		})
+	}).catch(() => {
+		req.flash("errors", "You do not have permission to perform that action")
+		req.session.save(()=>req.redirect("/"))
+
 	})
 }
