@@ -168,6 +168,21 @@ Post.delete = (postID, visitorID) => {
 		})
 }
 
+Post.search = (searchTerm) => {
+	return new Promise(async (resolve, reject) => {
+		if (typeof(searchTerm) == "string"){
+			let posts = await Post.reusablePostQuery([
+					{$match: {$text: {$search: searchTerm}}},
+					{$sort: {score: {$meta: "textScore"}}}
+				])
+			resolve(posts)
+			console.log(posts)
+		}else{
+			reject()
+		}
+	})
+}
+
 
 
 module.exports = Post

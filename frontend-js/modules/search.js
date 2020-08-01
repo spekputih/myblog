@@ -39,9 +39,16 @@ export default class Search {
 	keyPressHandler(){
 		let value = this.textField.value
 
+		if (value == ""){
+			clearTimeout(this.typingWaitTimer)
+			this.hideLoaderIcon()
+			this.hideResultArea()
+		}
+
 		if(value != "" && value != this.previousValue){
 			clearTimeout(this.typingWaitTimer)
 			this.showLoaderIcon()
+			this.hideResultArea()
 			this.typingWaitTimer = setTimeout(() => {
 				this.sendRequest()
 			}, 3000)
@@ -54,8 +61,8 @@ export default class Search {
 
 	sendRequest(){
 		axios.post("/search", {setValue: this.textField.value})
-		.then(() => {
-
+		.then((response) => {
+			this.renderResultHTML(response.data)
 		})
 		.catch(() => {
 			alert("Hello, the request has failed")
@@ -63,10 +70,44 @@ export default class Search {
 		
 	}
 
+	renderResultHTML(data){
+		console.log(data)
+		if(data.length){
+			this.resultSearch.innerHTML = `<div class="list-group-item active"><strong>Search Results</strong> (${data.length > 1 ? `${data.length} items found` : `1 item found`})</div>
+            ${data.map((post) => {
+            let postDate = new Date(post.createdDate)
+
+            return `<a href="/post/${post._id}" class="list-group-item list-group-item-action" />
+              <img class="avatar-tiny" src="${post.author.avatar}"></img> 
+              <strong>${post.title}</strong>
+              <span class="text-muted small">by ${post.author.firstname} ${post.author.lastname} on ${postDate.getMonth() + 1}/${postDate.getDate()}/${postDate.getFullYear()}</span>
+            </a>`
+            }).join(" ")}
+			</div>
+            `
+		}else{
+			this.resultSearch.innerHTML = `<p class="alert alert-danger text-center shadow-sm">Sorry, we could find the value for that search</p>`
+		}
+
+		this.hideLoaderIcon()
+		this.showResultArea()
+	}
+
 	showLoaderIcon(){
 		this.loaderIcon.classList.add("circle-loader--visible")
 	}
 
+	hideLoaderIcon(){
+		this.loaderIcon.classList.remove("circle-loader--visible")
+	}
+
+	showResultArea(){
+		this.resultSearch.classList.add("live-search-results--visible")
+	}
+
+	hideResultArea(){
+		this.resultSearch.classList.remove("live-search-results--visible")
+	}
 
 	closeSearch(){
 		this.overlay.classList.remove("search-overlay--visible")
@@ -87,25 +128,7 @@ export default class Search {
         <div class="circle-loader"></div>
         <div class="live-search-results">
           <div class="list-group shadow-sm">
-            <div class="list-group-item active"><strong>Search Results</strong> (4 items found)</div>
-
-            <a href="#" class="list-group-item list-group-item-action">
-              <img class="avatar-tiny" src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"> <strong>Example Post #1</strong>
-              <span class="text-muted small">by barksalot on 0/14/2019</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <img class="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"> <strong>Example Post #2</strong>
-              <span class="text-muted small">by brad on 0/12/2019</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <img class="avatar-tiny" src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"> <strong>Example Post #3</strong>
-              <span class="text-muted small">by barksalot on 0/14/2019</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <img class="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"> <strong>Example Post #4</strong>
-              <span class="text-muted small">by brad on 0/12/2019</span>
-            </a>
-          </div>
+            
         </div>
       </div>
     </div>

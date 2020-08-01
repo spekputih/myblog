@@ -80,3 +80,12 @@ exports.delete = (req, res) => {
 
 	})
 }
+
+exports.search = (req, res) => {
+	console.log("searchTerm: "+ req.body.setValue)
+		Post.search(req.body.setValue).then(result => {
+			res.json(result)
+		}).catch(()  => {
+			res.json([])
+		})
+}
