@@ -10,6 +10,8 @@ export default class RegistrationForm {
 		this.lastname.previousValue = ''
 		this.email = document.querySelector("#email")
 		this.email.previousValue = ""
+		this.password = document.querySelector("#password")
+		this.password.previousValue = ""
 		this.event()
 	}
 
@@ -24,6 +26,9 @@ export default class RegistrationForm {
 		this.email.addEventListener("keyup", () => {
 			this.isDifferent(this.email, this.emailHandler)
 		})
+		this.password.addEventListener("keyup", () => {
+			this.isDifferent(this.password, this.passwordHandler)
+		})
 	}
 
 	// Methods
@@ -32,7 +37,6 @@ export default class RegistrationForm {
 			handler.call(this)
 		}
 		el.previousValue = el.value 
-		console.log(el.previousValue)
 	}
 	usernameHandler(){
 		this.username.errors = false
@@ -111,13 +115,10 @@ export default class RegistrationForm {
 
 		if(!this.lastname.errors){
 			axios.post('/isLastnameExist', {lastname: this.lastname.value}).then(response => {
-				console.log(response.data)
 				if(response.data){
 					this.showValidationError(this.lastname, "Lastname has been taken")
-					console.log("Lastname already exist")
 					this.lastname.isUnique = false
 				}else{
-					console.log("username do not exist yet")
 					this.lastname.isUnique = true
 				}
 			})
@@ -138,16 +139,12 @@ export default class RegistrationForm {
 			this.hideValidationError(this.email)
 
 		}
-
 		if(!this.email.errors){
 			axios.post('/isEmailExist', {email: this.email.value}).then(response => {
-				console.log(response.data)
 				if(response.data){
 					this.showValidationError(this.email, "Email has been used by another user")
-					console.log("Email already exist")
 					this.email.isUnique = false
 				}else{
-					console.log("email do not exist yet")
 					this.email.isUnique = true
 					this.hideValidationError(this.email)
 				}
@@ -156,6 +153,30 @@ export default class RegistrationForm {
 
 	}
 
+	passwordHandler(){
+		this.password.errors = false
+		this.passwordImmediately()
+		clearTimeout(this.password.timer)
+		this.password.timer = setTimeout(()=> this.passwordAfterDelay(), 1000)
+	}
+
+	passwordImmediately(){
+		if(this.password.value.length > 30){
+			this.showValidationError(this.password, "Password cannot exceed 30 characters")
+			this.password.errors = true
+		}
+	}
+
+	passwordAfterDelay(){
+		if(this.password.value != ""  && this.password.value.length < 3){
+			this.showValidationError(this.password, "Password must have more than 3 characters")
+			this.password.errors = true
+		}
+		if(!this.password.errors){
+			this.hideValidationError(this.password)
+			this.password.errors = false
+		}
+	}
 
 	insertValidationElement(){
 
