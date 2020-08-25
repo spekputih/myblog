@@ -15,6 +15,8 @@ router.get("/admin", userController.admin)
 router.post("/register", userController.postRegister)
 router.post("/login", userController.postLogin)
 router.post("/signout", userController.signOut)
+router.post("/isUsernameExist", userController.isUsernameExist)
+router.post("/isLastnameExist", userController.isLastnameExist)
 
 // profile related router
 router.get("/profile/:firstname&:lastname", userController.ifUserExist, userController.profilePostsScreen)

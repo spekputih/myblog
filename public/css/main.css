@@ -373,3 +373,12 @@ textarea.tall-textarea {
   outline: none;
   font-size: .75rem;
 }
+
+.elementHidden{
+  visibility: hidden;
+  position: absolute;
+}
+.elementVisible{
+  visibility: visible;
+  position: relative;
+}

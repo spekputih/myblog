@@ -3,6 +3,8 @@ const userCollection  = require("../db").db().collection("users")
 const _ = require("lodash")
 const validator = require("validator")
 const md5 = require("md5")
+const { reject } = require("lodash")
+const { resolveInclude } = require("ejs")
 
 let User = function(data, avatar){
 	this.data = data
@@ -129,6 +131,29 @@ User.findByName = function(firstname, lastname){
 		})
 	})
 
+}
+
+User.usernameExist = function(username){
+	return new Promise(async(resolve, reject)=>{
+		let usernameEx = await userCollection.findOne({firstname: username})
+		if(usernameEx){
+			resolve()
+		}else{
+			reject()
+		}
+	})
+}
+
+User.lastnameExist = function(lastname){
+	return new Promise(async (resolve, reject) => {
+		let lastnameEx = await userCollection.findOne({lastname: lastname})
+		console.log(lastnameEx)
+		if (lastnameEx){
+			resolve()
+		}else{
+			reject()
+		}
+	})
 }
 
 module.exports = User

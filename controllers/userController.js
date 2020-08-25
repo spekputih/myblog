@@ -2,6 +2,25 @@ const User = require("../models/User")
 const Post = require("../models/Post")
 const usersCollection = require("../db").db().collection("users")
 
+
+exports.isUsernameExist = function(req, res){
+	User.usernameExist(req.body.username).then(()=>{
+		res.json(true)
+	}).catch(()=>{
+		res.json(false)
+	})
+}
+
+exports.isLastnameExist = function (req, res){
+	User.lastnameExist(req.body.lastname).then(() => {
+		console.log("then is ran")
+		res.json(true)
+	})
+	.catch(() => {
+		res.json(false)
+	})
+}
+
 exports.mustBeLoggedIn = function(req, res, next){
 	if(req.session.user){
 		next()
