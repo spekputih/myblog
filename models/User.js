@@ -156,4 +156,15 @@ User.lastnameExist = function(lastname){
 	})
 }
 
+User.emailExist = function (email){
+	return new Promise(async(resolve, reject) =>{
+		let emailEx = await userCollection.findOne({email: email})
+		if (emailEx){
+			resolve()
+		}else{
+			reject()
+		}
+	})
+}
+
 module.exports = User

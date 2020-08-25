@@ -13,12 +13,15 @@ exports.isUsernameExist = function(req, res){
 
 exports.isLastnameExist = function (req, res){
 	User.lastnameExist(req.body.lastname).then(() => {
-		console.log("then is ran")
 		res.json(true)
 	})
 	.catch(() => {
 		res.json(false)
 	})
+}
+
+exports.isEmailExist = function(req, res){
+	User.emailExist(req.body.email).then(() => res.json(true)).catch(()=> res.json(false))
 }
 
 exports.mustBeLoggedIn = function(req, res, next){
