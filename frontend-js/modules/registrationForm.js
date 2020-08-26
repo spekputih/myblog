@@ -2,6 +2,7 @@ import axios from "axios"
 
 export default class RegistrationForm {
 	constructor(){
+		this.form = document.querySelector("#registration-form")
 		this.allField = document.querySelectorAll(".form-style .form-control")
 		this.insertValidationElement()
 		this.username = document.querySelector("#firstname")
@@ -12,11 +13,19 @@ export default class RegistrationForm {
 		this.email.previousValue = ""
 		this.password = document.querySelector("#password")
 		this.password.previousValue = ""
+		this.email.isUnique = false
+		this.username.isUnique = false
+		this.lastname.isUnique = false
 		this.event()
 	}
 
 	// Events
 	event(){
+		this.form.addEventListener("submit", (e) => {
+			console.log(this.form)
+			e.preventDefault()
+			this.submitFormHandler()
+		})
  		this.username.addEventListener("keyup", () => {
 			 this.isDifferent(this.username, this.usernameHandler)
 		 })
@@ -29,9 +38,64 @@ export default class RegistrationForm {
 		this.password.addEventListener("keyup", () => {
 			this.isDifferent(this.password, this.passwordHandler)
 		})
+		this.username.addEventListener("blur", () => {
+			this.isDifferent(this.username, this.usernameHandler)
+		})
+	   	this.lastname.addEventListener("blur", () => {
+		   this.isDifferent(this.lastname, this.lastnameHandler)
+	   	})
+	   	this.email.addEventListener("blur", () => {
+		   this.isDifferent(this.email, this.emailHandler)
+	  	})
+	   	this.password.addEventListener("blur", () => {
+		   this.isDifferent(this.password, this.passwordHandler)
+	    })
 	}
 
 	// Methods
+	submitFormHandler(){
+		this.isFieldEValueExist()
+		this.usernameImmediately()
+		this.usernameAfterDelay()
+		this.emailAfterDelay()
+		this.lastnameImmediately()
+		this.lastnameAfterDelay()
+		this.passwordImmediately()
+		this.passwordAfterDelay()
+
+		if(
+			!this.username.errors &&
+			!this.email.errors &&
+			!this.lastname.errors &&
+			!this.password.errors &&
+			this.username.isUnique &&
+			this.lastname.isUnique &&
+			this.email.isUnique
+		){
+			this.form.submit()
+		}
+	}
+
+	isFieldEValueExist(){
+		if(this.username.value == ""){
+			this.showValidationError(this.username, "Username")
+			this.username.errors = true
+		}
+		if(this.lastname.value == ""){
+			this.showValidationError(this.lastname, "Lastname")
+			this.lastname.errors = true
+		}
+		if(this.email.value == ""){
+			console.log("email")
+			this.showValidationError(this.email, "Email")
+			this.email.errors = true
+		}
+		if(this.password.value == ""){
+			this.showValidationError(this.password, "Password")
+			this.password.errors = true
+		}
+	}
+
 	isDifferent(el, handler){
 		if(el.previousValue != el.value){
 			handler.call(this)
@@ -46,6 +110,7 @@ export default class RegistrationForm {
 	} 
 
 	usernameImmediately(){
+		console.log("username")
 		if(this.username.value != "" && !/^([a-zA-Z0-9]+)$/.test(this.username.value)){
 			this.showValidationError(this.username, "Username can only contain letters and numbers")
 		}
@@ -135,9 +200,6 @@ export default class RegistrationForm {
 	emailAfterDelay(){
 		if(this.email.value != "" && !/^\S+@\S+$/.test(this.email.value)){
 			this.showValidationError(this.email, "Please enter valid email address")
-		}else{
-			this.hideValidationError(this.email)
-
 		}
 		if(!this.email.errors){
 			axios.post('/isEmailExist', {email: this.email.value}).then(response => {
