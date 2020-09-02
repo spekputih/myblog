@@ -1,6 +1,11 @@
 const User = require("../models/User")
 const Post = require("../models/Post")
+const { resolveInclude } = require("ejs")
+const e = require("express")
+const { reject } = require("lodash")
 const usersCollection = require("../db").db().collection("users")
+
+
 
 
 exports.isUsernameExist = function(req, res){

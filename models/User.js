@@ -167,4 +167,5 @@ User.emailExist = function (email){
 	})
 }
 
+
 module.exports = User
