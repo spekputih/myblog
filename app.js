@@ -68,6 +68,7 @@ io.use(function(socket, next){
 })
 
 io.on("connection", (socket)=>{
+	console.log(socket)
 	if (socket.request.session.user){
 		let user = socket.request.session.user
 

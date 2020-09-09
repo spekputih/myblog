@@ -21,8 +21,9 @@ router.post("/isLastnameExist", userController.isLastnameExist)
 router.post("/isEmailExist", userController.isEmailExist)
 
 // profile related router
-router.get("/profile/:firstname&:lastname", userController.ifUserExist, userController.profilePostsScreen)
-
+router.get("/profile/:firstname&:lastname", userController.ifUserExist, userController.sharedProfileData, userController.profilePostsScreen)
+router.get("/profile/:firstname&:lastname/followers", userController.ifUserExist, userController.sharedProfileData, userController.getFollowers)
+router.get("/profile/:firstname&:lastname/following", userController.ifUserExist, userController.sharedProfileData, userController.getFollowing)
 
 // router for postController
 router.get("/create-post", userController.mustBeLoggedIn, postController.getPost)
@@ -36,6 +37,7 @@ router.post("/search", postController.search)
 // follow related router
 
 router.post("/addFollow/:firstname&:lastname", userController.mustBeLoggedIn, followController.addFollow)
+router.post("/removeFollow/:firstname&:lastname", userController.mustBeLoggedIn, followController.removeFollow)
 
 
 

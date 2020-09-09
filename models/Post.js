@@ -1,4 +1,5 @@
 const postCollection = require("../db").db().collection("posts")
+const followCollection = require("../db").db().collection("follows")
 const validator = require("validator")
 const _ = require("lodash")
 const ObjectID = require("mongodb").ObjectID
@@ -181,6 +182,39 @@ Post.search = (searchTerm) => {
 			reject()
 		}
 	})
+}
+Post.countPostsByAuthor = function(id){
+	return new Promise(async (resolve, reject) => {
+		let postCount = await postCollection.countDocuments({author: id})
+		resolve(postCount)
+	})
+}
+
+Post.getFeed = function(id){
+	return new Promise(async (resolve, reject) => {
+		// create an array of the user ids that the current user follow
+		try{
+			let followedId = await followCollection.find({followingUserID: new ObjectID(id)}).toArray()
+			// adjust the arrays which consist of followed user ids only
+			followedId = followedId.map((follow) => {
+				return follow.followedID
+			})
+
+			console.log(followedId)
+
+			// look for posts where the author is in the above array of followed users
+			let posts = await Post.reusablePostQuery([
+				{$match: {author: {$in: followedId}}},
+				{$sort: {createdDate: -1}}
+			])
+			console.log(posts)
+			resolve(posts) 
+		} catch (err) {
+			console.log(err)
+			reject()
+		}
+	})
+	
 }
 
 

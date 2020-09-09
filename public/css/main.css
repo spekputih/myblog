@@ -378,7 +378,12 @@ textarea.tall-textarea {
   visibility: hidden;
   position: absolute;
 }
+
 .elementVisible{
   visibility: visible;
   position: relative;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
 }

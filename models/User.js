@@ -3,8 +3,8 @@ const userCollection  = require("../db").db().collection("users")
 const _ = require("lodash")
 const validator = require("validator")
 const md5 = require("md5")
-const { reject } = require("lodash")
-const { resolveInclude } = require("ejs")
+const followsCollection = require("../db").db().collection("follows")
+const ObjectID = require("mongodb").ObjectID
 
 let User = function(data, avatar){
 	this.data = data
@@ -166,6 +166,7 @@ User.emailExist = function (email){
 		}
 	})
 }
+
 
 
 module.exports = User

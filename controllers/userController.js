@@ -1,12 +1,40 @@
 const User = require("../models/User")
 const Post = require("../models/Post")
-const { resolveInclude } = require("ejs")
 const e = require("express")
-const { reject } = require("lodash")
+const Follow = require("../models/Follow")
+const { endsWith } = require("lodash")
 const usersCollection = require("../db").db().collection("users")
 
 
+exports.sharedProfileData = async function(req, res, next){
+	let isFollowing = false
+	let currentUser = false
+	
+	if (req.session.user){
+		isFollowing = await Follow.isVisitorFollowing(req.profileUser._id, req.visitorID)
+		currentUser = false	
+	}
+	if (req.session.user._id == req.profileUser._id){
+		currentUser = true
+	}
 
+	req.isFollowing = isFollowing
+	req.currentUser = currentUser
+
+	// retrieve post, follower and following counts
+	let postCountPromise = Post.countPostsByAuthor(req.profileUser._id)
+	let followerCountPromise = Follow.countFollowerById(req.profileUser._id)
+	let followingCountPromise = Follow.countFollowingById(req.profileUser._id)
+
+	let [postCount, followerCount, followingCount] = await Promise.all([postCountPromise, followerCountPromise, followingCountPromise])
+	req.postCount = postCount
+	req.followerCount = followerCount
+	req.followingCount = followingCount
+
+	console.log(req.postCount + " " + req.followerCount + " " + req.followingCount)
+	
+	next()
+}
 
 exports.isUsernameExist = function(req, res){
 	User.usernameExist(req.body.username).then(()=>{
@@ -81,15 +109,17 @@ exports.register =  function(req, res){
 	res.render("register")
 }
 
-exports.admin = function(req, res){
-	
+exports.admin = async function(req, res){
 	if(req.session.user){
-		usersCollection.findOne({email: req.session.user.email}).then((result)=>{
-			res.render("admin/home-login")
-		}).catch(err =>{
+		try{
+			// find the related posts for admin feed
+			let posts = await Post.getFeed(req.session.user._id)
+			// console.log(posts)
+			res.render("admin/home-login", {posts: posts})
+		} catch (err) {
 			console.log(err)
-		})
-		
+			res.render("404")
+		}
 	}else{
 		res.redirect("/login")
 	}
@@ -119,9 +149,6 @@ exports.postRegister = async function(req, res){
 			res.redirect("/register")
 		})
 	})
-	
-	
-
 }
  
 exports.blog = function(req, res){
@@ -146,7 +173,6 @@ exports.signOut = function(req, res){
 }
 
 exports.ifUserExist = function(req, res, next){
-	console.log(req.params.firstname + req.params.lastname)
 	User.findByName(req.params.firstname, req.params.lastname).then((document)=>{
 		req.profileUser = document
 		next()
@@ -159,10 +185,52 @@ exports.profilePostsScreen = function(req, res){
 	// ask post model to query 
 	Post.findByAuthorId(req.profileUser._id).then((posts)=>{
 		res.render("admin/profile-posts", {
+			currentPage: "post",
 			posts: posts,
 			userFirstname: req.profileUser.firstname,
 			userLastname: req.profileUser.lastname,
-			userAvatar: req.profileUser.avatar
+			userAvatar: req.profileUser.avatar,
+			isFollowing: req.isFollowing,
+			currentUser: req.currentUser,
+			pageCount: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount}
 		})
 	}).catch()
+}
+
+exports.getFollowers = async function (req, res){
+	try{
+		
+		let followers = await Follow.getFollowersById(req.profileUser._id)
+		res.render("admin/profile-followers", {
+			currentPage: "followers",
+			followers: followers,
+			userFirstname: req.profileUser.firstname,
+			userLastname: req.profileUser.lastname,
+			userAvatar: req.profileUser.avatar,
+			isFollowing: req.isFollowing,
+			currentUser: req.currentUser,
+			pageCount: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount}
+		})
+	} catch {
+		res.render("404")
+	}
+}
+
+exports.getFollowing = async function (req, res){
+	try{
+		let following = await Follow.getFollowingById(req.profileUser._id)
+		res.render("admin/profile-following", {
+			currentPage: "following",
+			following: following,
+			userFirstname: req.profileUser.firstname,
+			userLastname: req.profileUser.lastname,
+			userAvatar: req.profileUser.avatar,
+			isFollowing: req.isFollowing,
+			currentUser: req.currentUser,
+			pageCount: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount}
+		})
+		console.log(req.currentUser)
+	} catch {
+		res.render("404")
+	}
 }

@@ -21,6 +21,7 @@ export default class Chat {
 		this.closeIcon.addEventListener("click", () => this.closeChat())
 	}
 
+	// Methods
 	sendMessageToServer(){
 		if(this.chatField.value != ""){
 			this.socket.emit("chatMessageFromBrowser", {message: this.chatField.value})
@@ -76,8 +77,7 @@ export default class Chat {
 			`)
 		this.chatLog.scrollTop = this.chatLog.scrollHeight
 	}
-
-	// Methods
+	
 	injectHTML(){
 		this.chatWrapper.innerHTML = `
 		<div class="chat-title-bar">Chat <span class="chat-title-bar-close"><i class="fas fa-times-circle"></i></span></div>
