@@ -1,67 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <title>Chat App</title>
 
-<%- include('partials/header') %>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
 
+    <!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
 
-<!-- BEGIN PAGE TITLE/BREADCRUMB -->
-		<div id="page-title-2" class="parallax dark-bg" data-stellar-background-ratio="0.5">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<h1 class="page-title">Login</h1>
-						
-						<ul class="breadcrumb">
-							<li><a href="index.html">Home </a></li>
-							<li><a href="#">Pages</a></li>
-							<li><a href="login.html">Login</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- END PAGE TITLE/BREADCRUMB -->
-		
-		
-		<!-- BEGIN CONTENT WRAPPER -->
-		<div class="content">
-			<div class="container">
-				<div class="row">
-				
-					<!-- BEGIN MAIN CONTENT -->
-					<div class="main col-sm-12">
-						<%- include("./partials/flash")%>
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-					
-						<div class="login col-sm-5 col-sm-offset-1">
-							<h1 class="center">Log in to your Account</h1>
-							
-							<div class="col-sm-12">
-								<form action="/login" method="post">
-									<input type="text" name="email" placeholder="Email Address" class="form-control" />
-									<input type="password" name="password" placeholder="Password" class="form-control" />
-									<div class="center"><button type="submit" class="btn btn-color">Log in</button></div>
-								</form>
-							
-								<p class="recover-pass"><a href="">Forgot your email address or password?</a></p>
-								
-								<div class="center"><a href="/register" class="btn btn-color">Create New Account</a></div>
-							</div>
-							
-							
-						</div>
-						
-						<div class="login-info col-sm-4 col-sm-offset-1">
-							<h1>Why should you create an account?</h1>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse facilisis purus sed justo egestas dapibus. Etiam vel sagittis nisi. Curabitur ac egestas lorem. Sed ut odio iaculis, interdum magna non, mattis dolor. Vestibulum id dignissim elit. Cras ut scelerisque dolor.</p>
-							
-							<h1>Lorem Ipsum Dolor</h1>
-							<p>Vestibulum rhoncus consequat aliquet. Mauris varius posuere mattis. Duis vitae molestie arcu. Curabitur sollicitudin, velit ut eleifend auctor, nibh orci pharetra risus, a malesuada nisi felis vel turpis. Aliquam fermentum nulla felis, sed molestie libero porttitor in.</p>
-						</div>
-					</div>	
-					<!-- END MAIN CONTENT -->
-
-				</div>
-			</div>
-		</div>
-		<!-- END CONTENT WRAPPER -->
-
-<%- include('partials/footer') %>
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+<!-- form start -->
+<form class="form-signin" action="/login" method="POST">
+  <img class="mb-4" src="images/user.png" alt="" width="72" height="72">
+  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+  
+  <label for="inputEmail" class="sr-only">Username</label>
+  <!-- input username -->
+  <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
+  <!-- input password -->
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+  <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
+</form>
+<!-- form end -->
+</body>
+</html>

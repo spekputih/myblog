@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/fontawesome.min.css" rel="stylesheet">
+    <link href="css/brands.min.css" rel="stylesheet">
+    <link href="css/solid.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+   
+        <div class="notification ">
+            <% if(errors.length > 0){ %>
+                <% errors.forEach((error)=> { %>
+                    <div class="noty-box error">
+                            <h6 id="noty-message"><%=error%></h6>
+                    </div>
+                <% }) %>
+            <% } %>
+            <% if(success.length > 0){ %>
+                <% success.forEach((success)=> { %>
+                    <div class="noty-box success">
+                        <h6 id="noty-message"><%=success%></h6>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    
+    
+    <div class="rows">
+    <section class="channel">
+        
+        <div class="channel-header">
+            <div class="row profile-nav">
+                <div class="col-md-2 profile-icon">
+                    <img src="images/User.jpg" alt="" class="profile-image">
+                </div>
+                <div class="other-icons">
+                    <i class="fas fa-history" aria-hidden="true"></i>
+                    <i data-id="message-open" id="envelope" class="fas fa-envelope-open" aria-hidden="true"></i>
+                    <form id="signout" action="/signout" method="POST">
+                        <i  class="fas fa-ellipsis-v" onclick="document.getElementById('signout').submit()"></i>
+                    </form>              
+                </div>
+            </div>
+            <div class="search">
+                <form action="">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+
+                    <input type="text" class="form-control form-search" name="search" placeholder="search or start new chat">
+                </form>
+            </div>
+        </div>
+        <div id="channel-list" class="channel-list">
+            
+        </div>
+            
+        
+    </section>
+    <div class="intro-chat-log">
+        <svg id="Capa_1" enable-background="new 0 0 512.464 512.464" height="512" viewBox="0 0 512.464 512.464" width="512" xmlns="http://www.w3.org/2000/svg"><g><g><g>
+            <path d="m93.087 344.571v111.079c0 27.235 22.078 49.314 49.314 49.314h228.425c27.235 0 49.314-22.078 49.314-49.314v-58.328-134.853-205.655c0-27.235-22.078-49.314-49.314-49.314h-228.425c-27.235 0-49.314 22.079-49.314 49.314v30.017z" fill="#b5adb6"/></g><path d="m208.186 433.902c-27.235 0-49.314-22.078-49.314-49.314v-111.079-257.739-8.27h-16.471c-27.235 0-49.314 22.079-49.314 49.314v30.017 257.74 111.079c0 27.235 22.078 49.314 49.314 49.314h228.425c27.235 0 49.314-22.078 49.314-49.314v-21.748z" 
+            fill="#aa9ea9"/><g>
+                <path d="m390.139 455.565c0 10.667-8.647 19.314-19.314 19.314h-228.425c-10.667 0-19.314-8.647-19.314-19.314v-398.836c0-10.667 8.647-19.314 19.314-19.314h30.205c4.466 0 8.524 2.595 10.397 6.649l6.889 14.909c2.843 4.726 7.955 7.616 13.469 7.616h106.502c5.515 0 10.626-2.89 13.469-7.616l6.889-14.909c1.873-4.054 5.932-6.649 10.397-6.649h30.205c10.667 0 19.314 8.647 19.314 19.314v398.836z" fill="#c8effe"/></g>
+                <path d="m264.801 437.563c-59.667 0-108.037-48.37-108.037-108.037v-292.11h-14.364c-10.667 0-19.314 8.647-19.314 19.314v398.836c0 10.667 8.647 19.314 19.314 19.314h228.425c10.667 0 19.314-8.647 19.314-19.314v-18.003z" fill="#99e6fc"/><path d="m242.689 116.831h-197.315c-20.862 0-37.774 16.912-37.774 37.774v122.193c0 20.862 16.912 37.774 37.774 37.774h149.319c20.862 0 37.774-16.912 37.774-37.774v-124.7l16.28-23.779c3.336-4.871-.153-11.488-6.058-11.488z" fill="#fd8087"/></g>
+                <path d="m114.155 259.001-36.34-36.34c-10.833-10.833-10.833-28.396 0-39.229l.175-.175c10.833-10.833 28.396-10.833 39.229 0l5.386 5.386c.315.315.825.315 1.139 0l5.386-5.386c10.833-10.833 28.396-10.833 39.229 0 10.901 10.901 10.822 28.599-.175 39.403l-37.071 36.417c-4.716 4.632-12.284 4.599-16.958-.076z" fill="#f9f7f8"/>
+                <path d="m467.437 292.469h-163.555c-20.67 0-37.426 16.756-37.426 37.426 0 20.67 16.756 37.426 37.426 37.426h15.59v23.509c0 1.843 2.229 2.767 3.532 1.463l24.973-24.973h119.461c20.67 0 37.426-16.756 37.426-37.426 0-20.669-16.757-37.425-37.427-37.425z" fill="#fee97d"/><g>
+                    <path d="m467.438 284.969h-15.336c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5h15.336c16.501 0 29.926 13.425 29.926 29.926s-13.425 29.926-29.926 29.926h-119.461c-1.989 0-3.897.79-5.303 2.197l-15.702 15.702v-10.398c0-4.142-3.358-7.5-7.5-7.5h-15.589c-16.501 0-29.926-13.425-29.926-29.926s13.425-29.926 29.926-29.926h116.257c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-116.258c-24.772 0-44.926 20.154-44.926 44.926s20.154 44.926 44.926 44.926h8.089v16.009c0 3.884 2.319 7.354 5.907 8.841 1.191.494 2.438.733 3.672.733 2.485 0 4.921-.973 6.756-2.808l22.776-22.776h116.354c24.772 0 44.926-20.154 44.926-44.926s-20.152-44.926-44.924-44.926z"/>
+                    <path d="m93.087 94.331c4.142 0 7.5-3.358 7.5-7.5v-30.017c0-23.056 18.757-41.814 41.813-41.814h228.425c23.056 0 41.814 18.758 41.814 41.814v205.655c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-205.655c0-31.327-25.487-56.814-56.814-56.814h-228.425c-31.327 0-56.813 25.487-56.813 56.814v30.017c0 4.142 3.358 7.5 7.5 7.5z"/><path d="m420.139 389.821c-4.142 0-7.5 3.358-7.5 7.5v58.329c0 23.056-18.758 41.814-41.814 41.814h-228.425c-23.056 0-41.813-18.758-41.813-41.814v-111.079c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v111.079c0 31.327 25.486 56.814 56.813 56.814h228.425c31.327 0 56.814-25.487 56.814-56.814v-58.329c0-4.142-3.358-7.5-7.5-7.5z"/>
+                    <path d="m390.139 269.969c4.142 0 7.5-3.358 7.5-7.5v-205.74c0-14.785-12.029-26.814-26.814-26.814h-30.205c-7.363 0-14.117 4.319-17.205 11.003l-6.69 14.479c-1.511 2.286-4.108 3.693-6.86 3.693h-106.503c-2.752 0-5.35-1.407-6.861-3.693l-6.69-14.479c-3.089-6.684-9.843-11.002-17.206-11.002h-30.205c-14.785 0-26.814 12.029-26.814 26.814v30.102c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-30.103c0-6.514 5.3-11.814 11.814-11.814h30.205c1.536 0 2.945.901 3.589 2.295l6.889 14.91c.114.247.241.487.382.721 4.175 6.938 11.798 11.249 19.896 11.249h106.502c8.098 0 15.722-4.311 19.896-11.25.14-.233.268-.474.381-.72l6.89-14.91c.645-1.394 2.053-2.295 3.589-2.295h30.205c6.514 0 11.814 5.3 11.814 11.814v205.74c.001 4.142 3.359 7.5 7.501 7.5z"/>
+                    <path d="m115.586 455.565c0 14.785 12.029 26.814 26.814 26.814h228.425c14.785 0 26.814-12.029 26.814-26.814v-58.244c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v58.244c0 6.514-5.3 11.814-11.814 11.814h-228.425c-6.514 0-11.814-5.3-11.814-11.814v-39.112c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5z"/>
+                    <path d="m123.086 391.991c4.142 0 7.5-3.358 7.5-7.5v-39.92c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v39.92c0 4.142 3.358 7.5 7.5 7.5z"/><path d="m239.967 276.797v-122.378l14.969-21.863c3.12-4.557 3.458-10.422.882-15.307s-7.606-7.919-13.128-7.919h-57.726c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5l57.424.001-16.11 23.529c-.854 1.248-1.312 2.725-1.312 4.237v124.699c0 16.693-13.581 30.273-30.274 30.273h-149.318c-16.693 0-30.273-13.581-30.273-30.273v-122.192c0-16.693 13.581-30.273 30.273-30.273h107.628c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-107.628c-24.964 0-45.273 20.31-45.273 45.273v122.193c0 24.964 20.31 45.273 45.273 45.273h149.319c24.964.001 45.274-20.309 45.274-45.273z"/>
+                    <path d="m123.826 177.954-.652.652-.652-.652c-13.74-13.74-36.096-13.74-49.835 0l-.175.175c-13.739 13.739-13.74 36.095 0 49.835l36.34 36.34c3.799 3.799 8.809 5.701 13.821 5.701 4.953 0 9.909-1.858 13.696-5.579l37.07-36.417c6.757-6.638 10.501-15.51 10.543-24.982s-3.623-18.376-10.321-25.074c-13.74-13.739-36.096-13.739-49.835.001zm39.101 39.356-37.07 36.417c-1.772 1.74-4.643 1.728-6.399-.028l-36.34-36.34c-7.891-7.892-7.891-20.731 0-28.623l.175-.175c3.946-3.946 9.128-5.918 14.312-5.918 5.182 0 10.366 1.973 14.311 5.918l5.386 5.386c1.568 1.569 3.654 2.433 5.873 2.433s4.305-.864 5.873-2.433l5.386-5.386c7.892-7.891 20.731-7.89 28.623 0 3.847 3.847 5.952 8.961 5.928 14.401-.027 5.439-2.177 10.535-6.058 14.348z"/></g></g></svg>
+        <p class="intro-message">
+            Click the channel list in order to see the history of the message that we have recorded
+        </p>
+    </div>
+    <section id="chat-section">
+    <section id="chat-one" class="align chat">
+        
+            <div class="align chat-header">
+                <div class="chat-profile">
+                    <img src="images/1.jpg" height="40" width="40" alt="">
+                </div>
+                <div class="chat-information">
+                <div class="chat-title">
+                        <h5 data-channelName="">International Islamic University</h5>
+                </div>
+                <div class="chat-description">
+                    Admin, Izwan, Afiq, Shida, Azami
+                </div>
+                </div>
+                <div class="chat-icon">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+                    <!-- <i class="fas fa-microphone" aria-hidden="true"></i>
+                    <i class="fas fa-paperclip" aria-hidden="true"></i> -->
+
+                </div>
+            </div>
+            <div class="chat-log">
+                <div class="chat-log-box">
+                    <div class="chat-box-me">
+                        <p>Assalamualaikum</p>
+                    </div>
+                    <div class="box-clear"></div>
+                </div>
+                
+                <div class="chat-log-box">
+                    <div class="chat-box-other">
+                        <h6 class="name">Afiq Syazwan</h6>
+                        <p class="message">hello</p>
+                        
+                    </div>
+                    <div class="box-clear"></div>
+                </div>
+                
+            </div>
+        
+        <div class="align chat-input">
+            <div class="input-icon">
+                <i class="fas fa-smile-wink" aria-hidden="true"></i>
+                <i class="fas fa-paperclip" aria-hidden="true"></i> 
+            </div>
+            <div class="form-message">
+                <form action="">
+                    <input id="chat-input1" class="form-style" type="text" placeholder="type a message">
+                </form>
+            </div>
+            <div class="input-icon mic">
+                <i class="fas fa-microphone" aria-hidden="true"></i>
+            </div>
+
+    </div>
+    </section>
+    <section id="chat-two" class="align chat">
+        <!-- <div class="chat-front"></div> -->
+        
+            <div class="align chat-header">
+                <div class="chat-profile">
+                    <img src="images/2.png" height="40" width="40" alt="">
+                </div>
+                <div class="chat-information">
+                <div class="chat-title">
+                        <h5 class="channel-name">Biochemical Engineering Student Society</h5>
+                </div>
+                <div class="chat-description">
+                    Admin, Izwan, 
+                </div>
+                </div>
+                <div class="chat-icon">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+                    
+
+                </div>
+            </div>
+            <div class="chat-log">
+                <div class="chat-log-box">
+                    <div class="chat-box-me">
+                        <p>Assalamualaikum</p>
+                    </div>
+                    <div class="box-clear"></div>
+                </div>                
+                <div class="chat-log-box">
+                    <div class="chat-box-other">
+                        <h6 class="name">Amirul Izwan</h6>
+                        <p class="message">Waalalikumsalam</p>                        
+                    </div>
+                    <div class="box-clear"></div>
+                </div>
+                <div class="chat-log-box">
+                    <div class="chat-box-me">
+                        <p>Apa khabar?</p>
+                    </div>
+                    <div class="box-clear"></div>
+                </div>                
+                <div class="chat-log-box">
+                    <div class="chat-box-other">
+                        <h6 class="name">Amirul Izwan</h6>
+                        <p class="message">Baik je</p>                        
+                    </div>
+                    <div class="box-clear"></div>
+                </div>
+            </div>
+        
+        <div class="align chat-input">
+            <div class="input-icon">
+                <i class="fas fa-smile-wink" aria-hidden="true"></i>
+                <i class="fas fa-paperclip" aria-hidden="true"></i> 
+            </div>
+            <div class="form-message">
+                <form id="formChat" class="form-chat">
+                    <input id="chat-input2" class="form-style" type="text" placeholder="type a message">
+                </form>
+            </div>
+            <div class="input-icon mic">
+                <i class="fas fa-microphone" aria-hidden="true"></i>
+            </div>
+
+        </div>
+    </section>
+    </section>
+    <div id="message-open" class="modal">
+        <div class="modal-box">
+            <div class="modal-title">
+                <h4>Start Chat</h4>
+                <i class="fas fa-plus" id="modalClose"></i>
+            </div>
+            <div class="content">
+                <form class="modal-form" action="">
+                    <input class="modal-username" type="text" name="username" placeholder="Enter the username that you want to start to chat with" >
+                    <div class="modal-footer">
+                        <button id="modal-start-chat" type="submit">Start</button>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    <!-- <script src="js/main.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="main-bundle.js"></script>
+</body>
+</html>

@@ -1,16 +1,10 @@
-import Search from "./modules/search"
-import Chat from "./modules/newChat"
-import RegistrationForm from "./modules/registrationForm"
-// if (document.querySelector("#register-form")){new RegistrationForm()}
-// if (document.querySelector("#chat-wrapper")){
-// 	new Chat()
-// }
-// new Search()
 // const channels = document.querySelectorAll(".channel-information")
-// import Chat from "../../frontend-js/newChat"
+import Chat from "../../frontend-js/newChat"
 const chat = document.querySelector(".chat")
 let previous 
 let previousChat
+
+
 const notification =  document.getElementsByClassName("notification")
 if(document.getElementById("noty-message")){
 const notyMessage = document.getElementById("noty-message")
@@ -22,6 +16,8 @@ const notyMessage = document.getElementById("noty-message")
         }, 2000)
     }
 }
+
+
 // modal toggle
 const modalIcon = document.getElementById('envelope')
 const modalCloseIcon =  document.getElementById("modalClose")
@@ -33,18 +29,20 @@ modalIcon.addEventListener("click", () => {
 modalCloseIcon.addEventListener("click", () => {
     document.getElementById(modalIcon.dataset.id).classList.remove("modal-active")    
 })
+
+
 // Start Chat 
 
-const modalForm = document.querySelector('.modal-form')
+const modalStartChat = document.getElementById("modal-start-chat")
 const username = document.getElementsByClassName("modal-username")
 const channelList = document.getElementById("channel-list")
 const chatSection = document.getElementById("chat-section")
 
 const channelCall = function(){
     channels.forEach((channel, key) => {
-        channel.addEventListener("click", () => {
+        channel.addEventListener("click", (e) => {
             let currentChannel = getCurrentChannel(channel.id)
-            validateChannel(currentChannel)                            
+            validateChannel(currentChannel)
         })
     })
     
@@ -73,6 +71,7 @@ const channelCall = function(){
         }
 }
 
+
 let prevNum 
 let currentNum
 let channels = document.querySelectorAll(".channel-information")
@@ -83,12 +82,9 @@ if (prevNum === currentNum || currentNum == undefined) {
     channelCall()    
 }
 
-
-modalForm.addEventListener("submit", function(e){
-    e.preventDefault()
+modalStartChat.addEventListener("click", function(){
     document.getElementById(modalIcon.dataset.id).classList.remove("modal-active")
-    let newUsername = username[0].value
-    if(newUsername != ""){
+    newUsername = username[0].value
     channelList.insertAdjacentHTML("afterbegin", 
     `<div id="${newUsername}" class="row channel-information">
         <div class="icon">
@@ -128,7 +124,23 @@ modalForm.addEventListener("submit", function(e){
 
         </div>
     </div>
-    <div id="${newUsername}-chatLog" class="chat-log">        
+    <div class="chat-log">
+        <div class="chat-log-box">
+            <div class="chat-box-me">
+                <p>Assalamualaikum</p>
+            </div>
+            <div class="box-clear"></div>
+        </div>
+        
+        <div class="chat-log-box">
+            <div class="chat-box-other">
+                <h6 class="name">Afiq Syazwan</h6>
+                <p class="message">hello</p>
+                
+            </div>
+            <div class="box-clear"></div>
+        </div>
+        
     </div>
 
 <div class="align chat-input">
@@ -137,8 +149,8 @@ modalForm.addEventListener("submit", function(e){
         <i class="fas fa-paperclip" aria-hidden="true"></i> 
     </div>
     <div class="form-message">
-        <form id="${newUsername}-formChat" class="form-chat">
-            <input id="${newUsername}-input" class="form-style" type="text" placeholder="type a message">
+        <form action="">
+            <input class="form-style" type="text" placeholder="type a message">
         </form>
     </div>
     <div class="input-icon mic">
@@ -148,20 +160,23 @@ modalForm.addEventListener("submit", function(e){
 </div>
 </section>`)
 
-let formInput = document.querySelector(`#${newUsername}-input`)
 channels = document.querySelectorAll(".channel-information")
 currentNum = channels.length
+
     console.log(currentNum)
     username[0].value = ""
-    // show = true    
+    // show = true
+    
     channelCall()
-    formInput.focus()
-    new Chat(newUsername)
-}
-
+    new Chat
+    
+    
 })
 
-// for channel that has been already listed in the channel list section
+
+
+    
+
 // channel.addEventListener("click", (e)=>{
 //     console.log(e)
 //     // channel.classList.toggle("active")
