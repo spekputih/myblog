@@ -58,6 +58,23 @@
             </div>
         </div>
         <div id="channel-list" class="channel-list">
+            <% data.forEach(function(channel, index){ %>
+                <div id="<%='list-' + channel.to%>" class="row channel-information">
+                    <div class="icon">
+                        <img src="images/user.png" alt="">
+                    </div>
+                    <div class="channel-detail">
+                        <div class="channel-title">
+                            <h6 class="title"><%=channel.to%></h6>
+                            <span class="time">11.50</span>
+                        </div>
+                        <div class="channel-description">
+                            <p id="description-<%= channel.to %>" class="description"><%=channel.LatestMsg[data[index].LatestMsg.length - 1].message%></p> 
+                            <span class="badge message-number">23</span>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
             
         </div>
             
@@ -82,18 +99,19 @@
         </p>
     </div>
     <section id="chat-section">
-    <section id="chat-one" class="align chat">
+    <% data.forEach(function(chat){ %>
+        <section id="chat-<%= chat.to %>" class="align chat">
         
             <div class="align chat-header">
                 <div class="chat-profile">
-                    <img src="images/1.jpg" height="40" width="40" alt="">
+                    <img src="images/user.png" height="40" width="40" alt="">
                 </div>
                 <div class="chat-information">
                 <div class="chat-title">
-                        <h5 data-channelName="">International Islamic University</h5>
+                        <h5><%= chat.to %></h5>
                 </div>
                 <div class="chat-description">
-                    Admin, Izwan, Afiq, Shida, Azami
+                    Type a message
                 </div>
                 </div>
                 <div class="chat-icon">
@@ -101,94 +119,29 @@
                     <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
                     <!-- <i class="fas fa-microphone" aria-hidden="true"></i>
                     <i class="fas fa-paperclip" aria-hidden="true"></i> -->
-
-                </div>
-            </div>
-            <div class="chat-log">
-                <div class="chat-log-box">
-                    <div class="chat-box-me">
-                        <p>Assalamualaikum</p>
-                    </div>
-                    <div class="box-clear"></div>
-                </div>
-                
-                <div class="chat-log-box">
-                    <div class="chat-box-other">
-                        <h6 class="name">Afiq Syazwan</h6>
-                        <p class="message">hello</p>
-                        
-                    </div>
-                    <div class="box-clear"></div>
-                </div>
-                
-            </div>
         
-        <div class="align chat-input">
-            <div class="input-icon">
-                <i class="fas fa-smile-wink" aria-hidden="true"></i>
-                <i class="fas fa-paperclip" aria-hidden="true"></i> 
+                </div>
             </div>
-            <div class="form-message">
-                <form action="">
-                    <input id="chat-input1" class="form-style" type="text" placeholder="type a message">
-                </form>
-            </div>
-            <div class="input-icon mic">
-                <i class="fas fa-microphone" aria-hidden="true"></i>
-            </div>
-
-    </div>
-    </section>
-    <section id="chat-two" class="align chat">
-        <!-- <div class="chat-front"></div> -->
-        
-            <div class="align chat-header">
-                <div class="chat-profile">
-                    <img src="images/2.png" height="40" width="40" alt="">
-                </div>
-                <div class="chat-information">
-                <div class="chat-title">
-                        <h5 class="channel-name">Biochemical Engineering Student Society</h5>
-                </div>
-                <div class="chat-description">
-                    Admin, Izwan, 
-                </div>
-                </div>
-                <div class="chat-icon">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                    <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+            <div id="chatLog-<%= chat.to %>" class="chat-log">
+                <% chat.LatestMsg.forEach(function(message, index){ %>
+                    <% if(message.from === user.username){ %>
+                        <div class="chat-log-box">
+                            <div class="chat-box-me">
+                                <p><%=message.message%></p>
+                            </div>
+                            <div class="box-clear"></div>
+                        </div>
                     
-
-                </div>
-            </div>
-            <div class="chat-log">
-                <div class="chat-log-box">
-                    <div class="chat-box-me">
-                        <p>Assalamualaikum</p>
-                    </div>
-                    <div class="box-clear"></div>
-                </div>                
-                <div class="chat-log-box">
-                    <div class="chat-box-other">
-                        <h6 class="name">Amirul Izwan</h6>
-                        <p class="message">Waalalikumsalam</p>                        
-                    </div>
-                    <div class="box-clear"></div>
-                </div>
-                <div class="chat-log-box">
-                    <div class="chat-box-me">
-                        <p>Apa khabar?</p>
-                    </div>
-                    <div class="box-clear"></div>
-                </div>                
-                <div class="chat-log-box">
-                    <div class="chat-box-other">
-                        <h6 class="name">Amirul Izwan</h6>
-                        <p class="message">Baik je</p>                        
-                    </div>
-                    <div class="box-clear"></div>
-                </div>
-            </div>
+                    <% }else{ %>
+                        <div class="chat-log-box">
+                            <div class="chat-box-other">
+                                <h6 class="name"><%= message.from %></h6>
+                                <p class="message"><%=message.message%></p>                        
+                            </div>
+                            <div class="box-clear"></div>
+                    <% } %>
+                <% }) %>
+            </div>  
         
         <div class="align chat-input">
             <div class="input-icon">
@@ -196,16 +149,17 @@
                 <i class="fas fa-paperclip" aria-hidden="true"></i> 
             </div>
             <div class="form-message">
-                <form id="formChat" class="form-chat">
-                    <input id="chat-input2" class="form-style" type="text" placeholder="type a message">
+                <form id="formChat-<%= chat.to %>" class="form-chat">
+                    <input id="input-<%= chat.to %>" class="form-style" type="text" placeholder="type a message">
                 </form>
             </div>
             <div class="input-icon mic">
                 <i class="fas fa-microphone" aria-hidden="true"></i>
             </div>
-
+        
         </div>
-    </section>
+        </section>
+    <% }) %>
     </section>
     <div id="message-open" class="modal">
         <div class="modal-box">

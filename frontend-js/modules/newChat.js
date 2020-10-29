@@ -2,10 +2,11 @@ export default class Chat {
     constructor(targetUser){
         this.openConnection()
         this.targetUser = targetUser
-        this.formInput = document.querySelector(`#${targetUser}-input`)
-        this.chatLog = document.querySelector(`#${targetUser}-chatLog`)
+        this.formInput = document.querySelector(`#input-${targetUser}`)
+        this.chatLog = document.querySelector(`#chatLog-${targetUser}`)
         this.chatLogBox = document.querySelector(".chat-log-box")
-        this.formChat = document.querySelector(`#${targetUser}-formChat`)
+        this.formChat = document.querySelector(`#formChat-${targetUser}`)
+        this.descriptionChannel = document.querySelector(`#description-${targetUser}`)
         console.log(this.formInput, this.formChat, this.chatLog)
         this.event()
     }
@@ -40,9 +41,11 @@ export default class Chat {
             <div class="box-clear"></div>
         </div>`)
         }
+        this.descriptionStatusUpdate(this.formInput.value)
         this.chatLog.scrollTop = this.chatLog.scrollHeight
         this.formInput.value = ""
         this.formInput.focus()
+        console.log(this.chatLog.scrollTop)
     }
 
     openConnection(){
@@ -67,7 +70,11 @@ export default class Chat {
             <div class="box-clear"></div>`)
         }
         this.chatLog.scrollTop = this.chatLog.scrollHeight
-        // console.log(data)
+
+        console.log(this.chatLog.scrollTop)
+    }
+    descriptionStatusUpdate(message){
+        this.descriptionChannel.innerHTML = message
     }
 
 }

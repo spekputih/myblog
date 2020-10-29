@@ -106,17 +106,30 @@ io.on("connection", (socket)=>{
 		socket.emit("welcome", {username: user.username, avatar: user.avatar})
 		
 		socket.on("sendFromBrowser", async (data) => {
-			console.log(data.to)
+			// console.log(data.to)
 			// console.log(users[data.to])
+			let chatterArray = [data.to, data.username]
+			let newArray = chatterArray.sort()
 			try {
-				let user = await chatsCollection.findOne({username: data.username})
-				console.log(user)
-				if(user){
-					// await chatsCollection.updateOne()
+				let channel = await chatsCollection.findOne({chatter1: newArray[0], chatter2: newArray[1]})
+				// console.log(channel)
+				if(channel){
+					await chatsCollection.updateOne({chatter1: newArray[0], chatter2: newArray[1]}, {$push: {msgInfo: {
+						message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: new Date()}
+					}})
+				}else{
+					dbData = {
+						chatter1: newArray[0],
+						chatter2: newArray[1],
+						msgInfo: [
+							{message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: new Date()}
+						]
+					}
+					await chatsCollection.insertOne(dbData)
 				}
-				await chatsCollection.insertOne(data)
-				io.to(users[data.to].emit("privateMessage", {message: data.message, from: data.username, avatar: data.avatar}))
-	
+				if(users[data.to]){
+					io.to(users[data.to].emit("privateMessage", {message: data.message, from: data.username, avatar: data.avatar}))
+				}
 			} catch (error) {
 				console.log(error)
 			}

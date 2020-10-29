@@ -1,8 +1,31 @@
 const newUser = require("../models/newUser")
+const newUserCollection = require("../db").db().collection("user")
+const chatsCollection = require("../db").db().collection("chats")
 
-exports.home = function(req, res){
+
+
+exports.home = async function(req, res){
     if(req.session.user){
-        res.render("index")
+        let chatter1 = await chatsCollection.find({chatter1: req.session.user.username}).toArray()
+        let chatter2 = await chatsCollection.find({chatter2: req.session.user.username}).toArray()
+        let chatters = chatter1.concat(chatter2)
+        let data = chatters.map(function(data){
+            let to, from
+            if(req.session.user.username === data.chatter1){
+                from = data.chatter1
+                to = data.chatter2
+            }else{
+                from = data.chatter2
+                to = data.chatter1
+            }
+            return {
+                id: data._id.toString(),
+                to: to,
+                from: from,
+                LatestMsg: data.msgInfo,
+            }
+        })        
+        res.render("index", {data: data})
     }else{
         res.redirect("/login")
     }
