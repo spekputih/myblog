@@ -66,7 +66,8 @@
                     <div class="channel-detail">
                         <div class="channel-title">
                             <h6 class="title"><%=channel.to%></h6>
-                            <span class="time">11.50</span>
+                            <%console.log(channel)%>
+                            <span id="date-<%= channel.to %>" class="time"><%= channel.LatestMsg[data[index].LatestMsg.length - 1].timeStamp %></span>
                         </div>
                         <div class="channel-description">
                             <p id="description-<%= channel.to %>" class="description"><%=channel.LatestMsg[data[index].LatestMsg.length - 1].message%></p> 

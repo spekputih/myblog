@@ -22,6 +22,7 @@ const markdown = require("marked")
 const bodyParser = require("body-parser")
 const ejs = require("ejs")
 const MongoStore = require("connect-mongo")(session)
+const moment = require("moment")
 
 const app = express()
 
@@ -94,7 +95,7 @@ io.use(function(socket, next){
 let users = {}
 io.on("connection", (socket)=>{
 	// console.log(socket)
-
+	// console.log(moment)
 	if (socket.request.session.user){
 		
 		let user = socket.request.session.user
@@ -104,7 +105,8 @@ io.on("connection", (socket)=>{
 		// console.log(users)
 
 		socket.emit("welcome", {username: user.username, avatar: user.avatar})
-		
+
+		let exist = false
 		socket.on("sendFromBrowser", async (data) => {
 			// console.log(data.to)
 			// console.log(users[data.to])
@@ -115,27 +117,42 @@ io.on("connection", (socket)=>{
 				// console.log(channel)
 				if(channel){
 					await chatsCollection.updateOne({chatter1: newArray[0], chatter2: newArray[1]}, {$push: {msgInfo: {
-						message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: new Date()}
+						message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: `${new Date().getDate()}, ${new Date().getHours() + 1 }:${new Date().getMinutes() + 1}`}
 					}})
+					exist = true
 				}else{
 					dbData = {
 						chatter1: newArray[0],
 						chatter2: newArray[1],
 						msgInfo: [
-							{message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: new Date()}
+							{message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: `${new Date().getDate()}, ${new Date().getHours() + 1 }:${new Date().getMinutes() + 1}`}
 						]
 					}
 					await chatsCollection.insertOne(dbData)
+					exist = false
 				}
+				
 				if(users[data.to]){
+					console.log(data.to)
+					if(!exist){
+						io.to(users[data.to].emit("addChannel", {exist: exist, from: data.username, message: data.message}))
+					}else{
+						io.to(users[data.to].emit("updataDescprriptipon", {exist: exist, from: data.username, message: data.message}))
+					}
 					io.to(users[data.to].emit("privateMessage", {message: data.message, from: data.username, avatar: data.avatar}))
+					
+				}else{
+					console.log("offline")
 				}
+				
 			} catch (error) {
 				console.log(error)
 			}
+			console.log(exist)
 			
 			//socket.emit("chatMessageFromServer", {message: data.message, username: data.username, avatar: data.avatar})
 		})
+		
 	}
 })
 

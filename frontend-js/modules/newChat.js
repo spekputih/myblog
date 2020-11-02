@@ -1,3 +1,5 @@
+import Noty from "./Noty"
+
 export default class Chat {
     constructor(targetUser){
         this.openConnection()
@@ -7,6 +9,8 @@ export default class Chat {
         this.chatLogBox = document.querySelector(".chat-log-box")
         this.formChat = document.querySelector(`#formChat-${targetUser}`)
         this.descriptionChannel = document.querySelector(`#description-${targetUser}`)
+        this.dateChannel = document.querySelector(`#date-${targetUser}`)
+        this.channelList = document.querySelector("#channel-list")
         console.log(this.formInput, this.formChat, this.chatLog)
         this.event()
     }
@@ -42,39 +46,30 @@ export default class Chat {
         </div>`)
         }
         this.descriptionStatusUpdate(this.formInput.value)
+        console.log(this.username)
         this.chatLog.scrollTop = this.chatLog.scrollHeight
         this.formInput.value = ""
         this.formInput.focus()
-        console.log(this.chatLog.scrollTop)
+        // console.log(this.chatLog.scrollTop)
     }
 
     openConnection(){
-		this.socket = io()
+        this.socket = io()
+        console.log(this.socket)
 		this.socket.on("welcome", data => {
 			this.username = data.username
             this.avatar = data.avatar
             // console.log(data)
         })
         
-		this.socket.on("privateMessage", (data)=>{
-			this.displayMessageFromServer(data)
-		})
+		
     }
-    displayMessageFromServer(data){
-        if(data.message != ""){
-            this.chatLog.insertAdjacentHTML("beforeend", `<div class="chat-log-box">
-            <div class="chat-box-other">
-                <h6 class="name">${data.from}</h6>
-                <p class="message">${data.message}</p>                        
-            </div>
-            <div class="box-clear"></div>`)
-        }
-        this.chatLog.scrollTop = this.chatLog.scrollHeight
-
-        console.log(this.chatLog.scrollTop)
-    }
+    
     descriptionStatusUpdate(message){
+        
         this.descriptionChannel.innerHTML = message
+        console.log("element " + this.descriptionChannel.innerHTML)
+        this.dateChannel.innerHTML = `${new Date().getHours() + 1 }:${new Date().getMinutes() + 1}` 
     }
 
 }
