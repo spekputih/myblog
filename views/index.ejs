@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Whatsapp Clone App</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link href="css/fontawesome.min.css" rel="stylesheet">
@@ -66,11 +66,15 @@
                     <div class="channel-detail">
                         <div class="channel-title">
                             <h6 class="title"><%=channel.to%></h6>
-                            <%console.log(channel)%>
-                            <span id="date-<%= channel.to %>" class="time"><%= channel.LatestMsg[data[index].LatestMsg.length - 1].timeStamp %></span>
+                            <span id="date-<%= channel.to %>" class="time"></span>
                         </div>
                         <div class="channel-description">
-                            <p id="description-<%= channel.to %>" class="description"><%=channel.LatestMsg[data[index].LatestMsg.length - 1].message%></p> 
+                            <% if(channel.LatestMsg[data[index].LatestMsg.length - 1].message.length > 30){ %>
+                                <p id="description-<%= channel.to %>" class="description"><%=channel.LatestMsg[data[index].LatestMsg.length - 1].message.substr(0, 29)%>...</p> 
+                            <% }else{ %>
+                                <p id="description-<%= channel.to %>" class="description"><%=channel.LatestMsg[data[index].LatestMsg.length - 1].message%></p> 
+
+                            <% } %>
                             <span class="badge message-number">23</span>
                         </div>
                     </div>
@@ -111,7 +115,7 @@
                 <div class="chat-title">
                         <h5><%= chat.to %></h5>
                 </div>
-                <div class="chat-description">
+                <div id="chatDescription-<%= chat.to %>" class="chat-description">
                     Type a message
                 </div>
                 </div>
@@ -128,21 +132,25 @@
                     <% if(message.from === user.username){ %>
                         <div class="chat-log-box">
                             <div class="chat-box-me">
-                                <p><%=message.message%></p>
+                                <p><%=message.message%></p >
+                                <span class="time-chat"><span class="tc">11:20</span><i class="fas fa-smile-wink" aria-hidden="true"></i></span>
                             </div>
                             <div class="box-clear"></div>
                         </div>
                     
                     <% }else{ %>
-                        <div class="chat-log-box">
-                            <div class="chat-box-other">
+                        <div class="chat-log-box message-<%= chat.to %>">
+                            <div id="<%= message.from %>-<%=index%>" class="chat-box-other">
                                 <h6 class="name"><%= message.from %></h6>
-                                <p class="message"><%=message.message%></p>                        
+                                <p class="message"><%=message.message%></p>  
+                                <span class="time-chat">11:20</span>                       
                             </div>
                             <div class="box-clear"></div>
+                        </div>
                     <% } %>
                 <% }) %>
-            </div>  
+            </div>
+              
         
         <div class="align chat-input">
             <div class="input-icon">

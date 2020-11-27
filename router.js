@@ -17,6 +17,9 @@ router.post("/signout", newUserController.signOut)
 // const postController = require("./controllers/postController")
 // const followController = require("./controllers/followController")
 
+// Chat related routes
+router.post("/get-chat-message", chatController.getMessage)
+
 
 
 // router for userController

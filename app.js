@@ -1,18 +1,5 @@
 //jshint esversion:6
 require('dotenv').config()
-// const express = require("express")
-// const mongoose = require("mongoose")
-// const ejs = require("ejs")
-// const bodyParser = require("body-parser")
-// const session = require("express-session")
-// const passport = require("passport")
-// const passportLocalMongoose = require("passport-local-mongoose")
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
-// const findOrCreate = require('mongoose-findorcreate')
-// const MongoStore =  require("connect-mongo")(session)
-// const router = require("./router")
-// const flash = require("connect-flash")
-// const markdown = require("marked")
 
 const express = require("express")
 const session = require("express-session")
@@ -94,38 +81,48 @@ io.use(function(socket, next){
 })
 let users = {}
 io.on("connection", (socket)=>{
-	// console.log(socket)
-	// console.log(moment)
 	if (socket.request.session.user){
 		
 		let user = socket.request.session.user
-		// console.log(user)
 		socket.name = user.username
 		users[socket.name] = socket
-		// console.log(users)
-
+		socket.broadcast.emit("userOnline", {status: "online", from: user.username})
 		socket.emit("welcome", {username: user.username, avatar: user.avatar})
 
 		let exist = false
 		socket.on("sendFromBrowser", async (data) => {
-			// console.log(data.to)
-			// console.log(users[data.to])
 			let chatterArray = [data.to, data.username]
 			let newArray = chatterArray.sort()
 			try {
 				let channel = await chatsCollection.findOne({chatter1: newArray[0], chatter2: newArray[1]})
-				// console.log(channel)
 				if(channel){
-					await chatsCollection.updateOne({chatter1: newArray[0], chatter2: newArray[1]}, {$push: {msgInfo: {
-						message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: `${new Date().getDate()}, ${new Date().getHours() + 1 }:${new Date().getMinutes() + 1}`}
-					}})
+					await chatsCollection.updateOne({
+						chatter1: newArray[0],
+						chatter2: newArray[1]
+					},
+						{$push: {
+							msgInfo: {
+								message: data.message,
+								from: data.username,
+								avatar: data.avatar,
+								to: data.to,
+								isStatus: "sending",
+								timeStamp: new Date()
+							}
+						}
+					})
 					exist = true
 				}else{
 					dbData = {
 						chatter1: newArray[0],
 						chatter2: newArray[1],
-						msgInfo: [
-							{message: data.message, from: data.username, avatar: data.avatar, to: data.to, timeStamp: `${new Date().getDate()}, ${new Date().getHours() + 1 }:${new Date().getMinutes() + 1}`}
+						msgInfo: [{
+							message: data.message,
+							from: data.username,
+							avatar: data.avatar,
+							to: data.to,
+							isStatus: 'sending',
+							timeStamp: new Date() }
 						]
 					}
 					await chatsCollection.insertOne(dbData)
@@ -133,13 +130,29 @@ io.on("connection", (socket)=>{
 				}
 				
 				if(users[data.to]){
-					console.log(data.to)
+					// console.log(data.to)
 					if(!exist){
-						io.to(users[data.to].emit("addChannel", {exist: exist, from: data.username, message: data.message}))
+						io.to(users[data.to].emit("addChannel", {
+							exist: exist,
+							from: data.username,
+							message: data.message
+						}))
 					}else{
-						io.to(users[data.to].emit("updataDescprriptipon", {exist: exist, from: data.username, message: data.message}))
+						io.to(users[data.to].emit("updateDescription", {
+							exist: exist,
+							from: data.username,
+							message: data.message
+						}))
 					}
-					io.to(users[data.to].emit("privateMessage", {message: data.message, from: data.username, avatar: data.avatar}))
+					// io.to(users[data.to].emit("privateMessage", {
+					// 	message: data.message,
+					// 	from: data.username,
+					// 	avatar: data.avatar
+					// }))
+					io.to(users[data.to].emit("privateMessageClass", {
+						message: data.message,
+						from: data.username,
+						avatar: data.avatar}))
 					
 				}else{
 					console.log("offline")
@@ -148,12 +161,39 @@ io.on("connection", (socket)=>{
 			} catch (error) {
 				console.log(error)
 			}
-			console.log(exist)
 			
 			//socket.emit("chatMessageFromServer", {message: data.message, username: data.username, avatar: data.avatar})
+		})
+		socket.on("sendActivity", (data)=>{
+			if(users[data.to]){
+				console.log("activity", users[data.to].name)
+				io.to(users[data.to].emit("sendActivityFromServer", {to: data.to, from: data.from, activity: data.activityType}))			
+			}	
+		})
+		socket.on("sendStatusOnlineOrOffline", (data)=> {
+			socket.broadcast.emit("userOnline", data)
+		})
+		socket.on("checkIfUserOnline", (data)=>{
+			console.log(users[data.user])
+			if(users[data.user]){
+				socket.to(users[user.username].emit("userOnline", {status: "online", from: data.user}))			
+			}else{
+				socket.to(users[user.username].emit("userOnline", {status: "offline", from: data.user}))			
+			}
+		})
+		socket.on("disconnect", (reason)=>{
+			if(reason === "io server disconnect"){
+				socket.connect()
+			}
+			socket.broadcast.emit("userOnline", {status: "offline", from: user.username})
+			delete users[user.username]
+		})
+		socket.on("connect", ()=>{
+			socket.broadcast.emit("userOnline", {status: "online", from: user.username})
 		})
 		
 	}
 })
+
 
 module.exports = server
