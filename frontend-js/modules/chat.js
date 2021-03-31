@@ -17,11 +17,14 @@ export default class Chat {
 			e.preventDefault()
 			this.sendMessageToServer()
 		})
+		
 		this.openIcon.addEventListener("click", () => this.showChat())
 		this.closeIcon.addEventListener("click", () => this.closeChat())
 	}
 
 	// Methods
+
+
 	sendMessageToServer(){
 		if(this.chatField.value != ""){
 			this.socket.emit("chatMessageFromBrowser", {message: this.chatField.value})
@@ -34,7 +37,8 @@ export default class Chat {
 		        </div>
 		        <img class="chat-avatar avatar-tiny" src="${this.avatar}">
 		      </div>
-	      	`)
+			  `)
+			  this.privateMessage()
 		}
 		this.chatLog.scrollTop = this.chatLog.scrollHeight
 		this.chatField.value = ""
@@ -45,6 +49,8 @@ export default class Chat {
 		this.chatWrapper.classList.remove("chat--visible")
 	}
 
+	
+
 	showChat(){
 		if(!this.openedYet){
 			this.openConnection()
@@ -52,6 +58,10 @@ export default class Chat {
 		this.openedYet = true
 		this.chatWrapper.classList.add("chat--visible")
 		this.chatField.focus()
+	}
+
+	privateMessage(){
+		this.socket.emit("privateMessage", {message: "private message", to: "FafiqSyaz", firstname: "Afiq", lastname: "Syazwan", avatar: "https://gravatar.com/avatar/3f8bce029bfc0388361918ccd30e2ab4?s=128"})
 	}
 
 	openConnection(){
@@ -63,8 +73,16 @@ export default class Chat {
 		this.socket.on("chatMessageFromServer", (data)=>{
 			this.displayMessageFromServer(data)
 		})
+
+		this.socket.on("privateFromServer", (data) => {
+			this.displayMessageFromServer(data)
+			console.log(`message from ${data.firstname} ${data.lastname}: ${data.message}`)
+		})
 	}
 
+	
+
+	
 	displayMessageFromServer(data){
 		this.chatLog.insertAdjacentHTML("beforeend", `
 				<div class="chat-other">
@@ -80,7 +98,7 @@ export default class Chat {
 	
 	injectHTML(){
 		this.chatWrapper.innerHTML = `
-		<div class="chat-title-bar">Chat <span class="chat-title-bar-close"><i class="fas fa-times-circle"></i></span></div>
+		<div class="chat-title-bar">Chat <span class="chat-title-bar-close"><i class="fas fa-times-circle">close</i></span></div>
 		<div id="chat" class="chat-log"></div>
 
 

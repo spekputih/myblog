@@ -67,15 +67,23 @@ io.use(function(socket, next){
 	sessionOptions(socket.request, socket.request.res, next)
 })
 
+let users = {}
+
 io.on("connection", (socket)=>{
 	console.log(socket)
 	if (socket.request.session.user){
 		let user = socket.request.session.user
-
+		users[user.firstname+user.lastname] = socket
+		console.log(users[user.firstname+user.lastname])
 		socket.emit("welcome", {username: user.firstname, avatar: user.avatar})
 		console.log(user)
 		socket.on("chatMessageFromBrowser", (data) => {
 			socket.broadcast.emit("chatMessageFromServer", {message: data.message, username: user.firstname, avatar: user.avatar})
+		})
+		socket.on("privateMessage", (data) => {
+			console.log(data)
+			socket.to(users[data.to].emit("privateFromServer", {message: data.message, firstname: data.firstname, lastname: data.lastname, avatar: data.avatar}))
+
 		})
 	}
 })
